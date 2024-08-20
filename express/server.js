@@ -1,3 +1,4 @@
+import router from "./Router/router.js";
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -14,6 +15,7 @@ mongoose
     console.error("Connection failure", error);
   });
 
+app.use("/",router);
 app.use(express.json());
 app.use(cors());
 app.listen(PORT, () => {
