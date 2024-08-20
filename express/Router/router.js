@@ -1,5 +1,4 @@
 import Joi from "joi";
-import Model from "./database/db.js";
 import { Router } from "express";
 
 const router = Router();
