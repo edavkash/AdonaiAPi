@@ -4,13 +4,13 @@ import { Router } from "express";
 
 const router = Router();
 
-const userSchma = Joi.object({
+const userSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   age: Joi.number().integer().min(1).required(),
   email: Joi.string().email().required(),
 });
 
-const array = Joi.array().items(userSchma);
+const array = Joi.array().items(userSchema);
 
 const data = [
   {
@@ -26,14 +26,18 @@ const data = [
   },
 ];
 
-router.get("/", async(req, res) => {
+router.get("/", async (req, res) => {
   const { error, value } = array.validate(data);
   if (error) {
-    res.status(400).send(error.details);
-  } else {
-    res.status(200).json(value);
+    return res.status(400).send(error.details);
   }
-await value.save();
+  try {
+    const method = new Model(value);
+    await method.save();
+    res.status(200).json(method);
+  } catch (error) {
+    res.status(400).json({ message: "Bad Request:", error });
+  }
 });
 
 router.post("/create", async (req, res) => {
