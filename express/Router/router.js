@@ -26,17 +26,17 @@ const data = [
   },
 ];
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   const { error, value } = array.validate(data);
   if (error) {
     return res.status(400).send(error.details);
   }
   try {
-    const method = new Model(value);
-    await method.save();
+    const method = await Model.insertMany(value);
     res.status(200).json(method);
   } catch (error) {
-    res.status(400).json({ message: "Bad Request:", error });
+        console.error("Server error detail:", error)
+    res.status(400).json({ message: "Bad Request:" });
   }
 });
 
