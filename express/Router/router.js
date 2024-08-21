@@ -13,12 +13,12 @@ const userSchma = Joi.object({
 const array = Joi.array().items(userSchma);
 
 const data = [
-    {
-        name:"David",
-        age:18,
-        email:"daviddiem18@example.com"
-    }
-]
+  {
+    name: "David",
+    age: 18,
+    email: "daviddiem18@example.com",
+  },
+];
 
 router.get("/", (req, res) => {
   const { error, value } = array.validate(data);
@@ -26,6 +26,16 @@ router.get("/", (req, res) => {
     res.status(400).send(error.details);
   } else {
     res.status(200).json(value);
+  }
+});
+
+router.post("/create", (req, res) => {
+  const { error, value } = array.validate(data);
+  const method = value(req.body);
+  if (error) {
+    res.status(400).send(error.details);
+  } else {
+    res.status(200).send(method);
   }
 });
 
