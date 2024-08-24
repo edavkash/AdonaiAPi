@@ -21,7 +21,7 @@ const schema = new Schema([
       minlength: 10,
       maxlength: 100,
     },
-  },
+  }
 ]);
 
 const Model = new model("Collections", schema);
