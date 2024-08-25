@@ -14,56 +14,48 @@ const userSchema = Joi.object({
 const array = Joi.array().items(userSchema);
 
 //Create my data in the database
-router.post("/user", async (req, res) => {
+router.post("/", async (req, res) => {
     const { error, value } = array.validate(data);
     if (error) {
-        return res.status(400).send(error.details);
+        return res.status(404).json({ error: error.details[0].message });
     }
     try {
-        const createMethod = await Model.insertMany(value);
-        res.status(200).json(createMethod);
+        const createdData = await Model.insertMany(value);
+        res.status(200).json(createdData);
     } catch (error) {
-        console.error("Server error detail:", error);
+        console.error("Internal server error:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
 
-//Read data from my database
+//Read my data from the client side
 router.get("/", async (req, res) => {
     try {
-        const findData = await Model.find();
-        res.status(200).json(findData);
+        const users = await Model.find(req.body);
+        res.status(200).send(users);
     } catch (error) {
         console.error("Internal server error:", error);
-        res.status(500).json({ message: `Internal server error at: ${error}` });
+        res.status(500).json({ message: "Internal server error" });
     }
 });
 
-//Update data from the database
-router.put("/user/:id", async (req, res) => {
-    const { error, value } = array.validate(req.body);
-    const userID = req.params.id;
-
-    console.log("User ID:", userID);
-    console.log("Update Data:", value);
+//Update my data from the database
+router.put("/:id", async (req, res) => {
+    const { error, value } = userSchema.validate(req.body);
     if (error) {
-        console.log("Validation Error:", error.details[0].message);
-        return res.status(400).send(error.details[0].message);
+        return res.status(404).json({ error: error.details[0].message });
     }
-
     try {
-        const updateMethod = await Model.findByIdAndUpdate(userID, value, {
+        const updateUser = await Model.findByIdAndUpdate(req.params.id, value, {
             new: true,
-            runValidators: true,
         });
-
-        if (!updateMethod) {
-            return res.status(404).json({ message: "ID Not Found" });
+        if(!updateUser){
+            return res.status(404).json({msg:"User Not Found"})
         }
-        res.status(200).json(updateMethod);
+        res.status(200).send(updateUser);
     } catch (error) {
-        console.error("Internal server error");
-        res.status(500).json(error);
+        console.error("Internal server error:", error);
+        res.status(500).json({ message: "Internal server error:" });
     }
 });
 

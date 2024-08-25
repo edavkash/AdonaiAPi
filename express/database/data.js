@@ -10,6 +10,12 @@ const data = [
     age: 34,
     email: "rachelsandra20@example.com",
   },
+
+  {
+    name: "Diem",
+    age: 20,
+    email: "diemdavid100@example.com",
+  },
 ];
 
-export default data
+export default data;

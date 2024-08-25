@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const schema = new Schema([
+const schema = new Schema(
   {
     name: {
       type: String,
@@ -22,8 +22,8 @@ const schema = new Schema([
       maxlength: 100,
     },
   }
-]);
+);
 
-const Model = new model("Collections", schema);
+const Model = model("Collections", schema);
 
 export default Model;
